@@ -8,11 +8,17 @@ let toggles = [];
 let orderNames = [];
 let productNames = [];
 
+
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight+500);
   numProducts = int(prompt("Enter number of products:"));
   numOrders = int(prompt("Enter number of orders:"));
   t = int(prompt("Enter value of t:"));
+
+//   // Resize canvas if there are many orders
+//   if (numOrders * 30 + 500 > windowHeight - 50) {
+//     resizeCanvas(windowWidth - 50, numOrders * 30 + 500);
+//   }
 
   // Initialize prices and orders
   for (let i = 0; i < numProducts; i++) {
@@ -24,12 +30,21 @@ function setup() {
   for (let i = 0; i < numOrders; i++) {
     let order = [];
     for (let j = 0; j < numProducts; j++) {
-      order.push(floor(random(0, 2))); // Randomly 0 or 1 for whether the product is included
+      let sum =0;
+      for (let p=0; p < orders.length;p++){
+        sum = sum + orders[p][j];
+      }
+      if (sum < t){
+        order.push(floor(random(0, 2))); // Randomly 0 or 1 for whether the product is included
+      }else{
+        order.push(0);
+      }
+      
     }
     orders.push(order);
     orderNames.push("Order " + (i + 1)); // Assign order names
   }
-
+  
   // Initialize toggles for rounding decisions
   for (let i = 0; i < numProducts; i++) {
     toggles.push(false); // False means round down, true means round up
@@ -63,13 +78,13 @@ function drawGrids() {
   textSize(12); // Increase font size for "Orders"
   textStyle(BOLD); // Make "Orders" bold
   for (let j = 0; j < numProducts; j++) {
-    text(productNames[j], x + j * 100 + 40, y); // Adjusted text position for product names
+    text(productNames[j], x + j * 100 + 20, y-6); // Adjusted text position for product names
   }
 
   // Draw orders grid with order names
 //   text("Orders", x, y - 20);
   for (let i = 0; i < numOrders; i++) {
-    text(orderNames[i], x - 50, y + i * 30 + 20); // Display order names
+    text(orderNames[i], x - 65, y + i * 30 + 20); // Display order names
     for (let j = 0; j < numProducts; j++) {
       fill(200);
       rect(x + j * 100, y + i * 30, 100, 30); // Adjusted rect width to 100 for tight alignment
